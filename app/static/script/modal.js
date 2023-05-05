@@ -63,9 +63,62 @@ $(document).ready(function () {
         })
        
     });
+
+
+    // edit function code
+    function getTaskId() {
+        // Assuming the task ID is stored somewhere in the DOM
+        // We can retrieve it using jQuery
+        var taskId = $('#task-id').val();
+        return taskId;
+    }
+    function updateTaskList() {
+        $.ajax({
+          url: '/edit', // assuming this endpoint returns a list of tasks in the desired format
+          method: 'GET',
+          success: function(response) {
+            // assuming the response is a list of tasks in JSON format
+            var tasks = response.tasks;
+            var taskListHtml = '';
+            for (var i = 0; i < tasks.length; i++) {
+              var task = tasks[i];
+              taskListHtml += '<li>' + task.description + '</li>';
+            }
+            $('#task-list').html(taskListHtml); // assuming the task list is displayed inside a <ul> element with the id 'task-list'
+          },
+          error: function(xhr, status, error) {
+            // handle errors
+            alert('Error: ' + error);
+      }
+    });
+      }
+
+
     
 
-   
+    $('#edit-task-modal').click(function() {
+        console.log("clicked")
+        var taskDescription = $('#task-form-display').val();
+        var taskId = getTaskId(); // a function to retrieve the ID of the task to be edited
+        $.ajax({
+            url: '/edit/' + taskId,
+            method: 'PUT',
+            data: {description: taskDescription},
+            success: function(response) {
+                // update the UI to reflect the changes
+                updateTaskList();
+                // close the modal window
+                $('#edit-task-modal').modal('hide');
+            },
+            error: function(xhr, status, error) {
+                // handle errors
+                alert('Error: ' + error);
+            }
+        });
+    });
+    
+    
+    
     
     
     $('.remove').click(function () {

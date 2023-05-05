@@ -2,7 +2,6 @@
 from flask import Flask
 import psycopg2
 
-
 app = Flask(__name__)
 postgres = psycopg2.connect(
         host="dpg-chaa9m67avj5o48g5330-a.oregon-postgres.render.com",
